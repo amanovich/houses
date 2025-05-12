@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список домов</title>
+</head>
+<body>
+    <h1>Список коттеджей</h1>
+    {% for house in houses %}
+        <div>
+            <h2>{{ house.title }}</h2>
+            <p>{{ house.location }}</p>
+            <p>{{ house.price_per_day }} ₽ / сутки</p>
+            <img src="{{ house.image.url }}" alt="{{ house.title }}" width="300">
+        </div>
+    {% endfor %}
+</body>
+</html>

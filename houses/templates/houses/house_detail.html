@@ -1,0 +1,7 @@
+<h2>{{ house.title }}</h2>
+<p>{{ house.description }}</p>
+<p>{{ house.price_per_day }} ₽/сутки</p>
+<p>Сп. мест: {{ house.beds }}</p>
+<p>Удобства: {% for f in house.features.all %} {{ f.name }} {% endfor %}</p>
+<img src="{{ house.images.first.image.url }}" width="400">
+<a href="{% url 'booking_request' %}">Оставить заявку</a>

@@ -1,0 +1,9 @@
+<h2>Добавить объект недвижимости</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Сохранить</button>
+</form>
+
+<a href="{% url 'property_list' %}">Назад к списку</a>
