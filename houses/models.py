@@ -73,3 +73,31 @@ class Property(models.Model):
         if self.apartment_number:
             address += f", кв. {self.apartment_number}"
         return f"{self.get_type_display()}: {address} ({self.district})"
+
+
+class HouseRequest(models.Model):
+    check_in = models.DateField()
+    check_out = models.DateField()
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    people_count = models.PositiveIntegerField()
+    criteria = models.TextField(blank=True)
+    budget = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.name} — {self.check_in} to {self.check_out}"
+
+
+
+
+class RequestForm(models.Model):
+    check_in = models.DateField()
+    check_out = models.DateField()
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    guests = models.IntegerField()
+    criteria = models.TextField()
+    budget = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.name} ({self.check_in} - {self.check_out})"

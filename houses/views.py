@@ -2,10 +2,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import House, Location, Feature
 from .forms import BookingRequestForm
 from rest_framework import viewsets
-from .models import Property
 from .serializers import PropertySerializer
 from .forms import PropertyForm
-from .models import Property, Region
+from .models import  Region
+from .forms import HouseRequestForm
+from .forms import RequestFormForm
+from django.contrib import messages
+from rest_framework.generics import RetrieveAPIView
+from .models import Property
+
+
+
+class PropertyDetailAPIView(RetrieveAPIView):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+
+
 
 
 
@@ -73,3 +85,43 @@ def property_create(request):
 class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
+
+
+
+def home(request):
+    if request.method == 'POST':
+        form = HouseRequestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('thank_you')  # Сделай отдельную страницу "Спасибо"
+    else:
+        form = HouseRequestForm()
+    return render(request, 'home.html', {'form': form})
+
+
+def home_view(request):
+    if request.method == 'POST':
+        form = RequestFormForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')  # Название маршрута
+    else:
+        form = RequestFormForm()
+    return render(request, 'home.html', {'form': form})
+
+
+
+
+def home_view(request):
+    if request.method == 'POST':
+        form = RequestFormForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Спасибо, заявка принята!')
+            return redirect('home')
+    else:
+        form = RequestFormForm()
+    return render(request, 'home.html', {'form': form})
+
+
+
