@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import House, Location, Feature
 from .forms import BookingRequestForm
 from rest_framework import viewsets
-from .serializers import PropertySerializer
+from .serializers import PropertySerializer,HouseSerializer
 from .forms import PropertyForm
 from .models import  Region
 from .forms import HouseRequestForm
@@ -124,4 +124,19 @@ def home_view(request):
     return render(request, 'home.html', {'form': form})
 
 
+class HouseViewSet(viewsets.ModelViewSet):
+    queryset = House.objects.all()
+    serializer_class = HouseSerializer
 
+
+class ApartmentViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.filter(type='apartment')
+    serializer_class = PropertySerializer
+
+class HotelViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.filter(type='hotel')
+    serializer_class = PropertySerializer
+
+class HostelViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.filter(type='hostel')
+    serializer_class = PropertySerializer

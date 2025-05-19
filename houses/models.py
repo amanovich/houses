@@ -14,7 +14,7 @@ class Feature(models.Model):
 
 class House(models.Model):
     title = models.CharField(max_length=200)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    location = models.CharField(max_length=100)
     description = models.TextField()
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     beds = models.PositiveIntegerField()
@@ -57,12 +57,13 @@ class Property(models.Model):
         ('house', 'Дом'),
         ('apartment', 'Квартира'),
         ('hotel', 'Гостиница'),
+        ('hostel', 'хостел'),
     ]
 
     type = models.CharField(max_length=20, choices=PROPERTY_TYPES)  # Тип недвижимости
     street = models.CharField(max_length=255)                      # Улица
     house_number = models.CharField(max_length=10)                 # Номер дома
-    # apartment_number = models.CharField(max_length=10, blank=True, null=True)  # Квартира (необязательно)
+    apartment_number = models.CharField(max_length=10, blank=True, null=True)  # Квартира (необязательно)
     phone_number = models.CharField(max_length=20)                 # Телефон
     # latitude = models.DecimalField(max_digits=9, decimal_places=6)   # Широта
     # longitude = models.DecimalField(max_digits=9, decimal_places=6)  # Долгота
