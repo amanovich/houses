@@ -18,7 +18,7 @@ class House(models.Model):
     description = models.TextField()
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     beds = models.PositiveIntegerField()
-    features = models.ManyToManyField(Feature)
+    features = models.ManyToManyField(Feature, blank=True)
 
     def __str__(self):
         return self.title
@@ -38,14 +38,14 @@ class BookingRequest(models.Model):
     end_date = models.DateField()
 
 class Region(models.Model):
-        name = models.CharField(max_length=255)  # Название области
-        description = models.TextField()  # Описание области
+        name = models.CharField(max_length=255)
+        description = models.TextField()
 
         def __str__(self):
             return self.name
 
 class District(models.Model):
-        name = models.CharField(max_length=255)  # Название района
+        name = models.CharField(max_length=255)
         region = models.ForeignKey(Region, related_name='districts', on_delete=models.CASCADE)  # Связь с областью
 
 
@@ -60,13 +60,13 @@ class Property(models.Model):
         ('hostel', 'хостел'),
     ]
 
-    type = models.CharField(max_length=20, choices=PROPERTY_TYPES)  # Тип недвижимости
-    street = models.CharField(max_length=255)                      # Улица
-    house_number = models.CharField(max_length=10)                 # Номер дома
-    apartment_number = models.CharField(max_length=10, blank=True, null=True)  # Квартира (необязательно)
-    phone_number = models.CharField(max_length=20)                 # Телефон
-    # latitude = models.DecimalField(max_digits=9, decimal_places=6)   # Широта
-    # longitude = models.DecimalField(max_digits=9, decimal_places=6)  # Долгота
+    type = models.CharField(max_length=20, choices=PROPERTY_TYPES)
+    street = models.CharField(max_length=255)
+    house_number = models.CharField(max_length=10)
+    apartment_number = models.CharField(max_length=10, blank=True, null=True)
+    phone_number = models.CharField(max_length=20)
+    # latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    # longitude = models.DecimalField(max_digits=9, decimal_places=6)
     district = models.ForeignKey(District, on_delete=models.CASCADE)
 
     def __str__(self):
