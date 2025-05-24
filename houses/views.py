@@ -1,33 +1,45 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import House, Location, Feature
-from .forms import BookingRequestForm
-from rest_framework import viewsets
-from .serializers import PropertySerializer,HouseSerializer
-from .forms import PropertyForm
-from .models import  Region
-from .forms import HouseRequestForm
-from .forms import RequestFormForm
+from .models import House, Location, Feature, Property, Region
+from .forms import BookingRequestForm, PropertyForm, HouseRequestForm, RequestFormForm
 from django.contrib import messages
-from rest_framework.generics import RetrieveAPIView
-from .models import Property
+from rest_framework import viewsets, generics
+from .serializers import PropertySerializer, HouseSerializer
 
 
-
-class PropertyDetailAPIView(RetrieveAPIView):
+class PropertyDetailAPIView(generics.RetrieveAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
 
 
+class ApartmentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Property.objects.filter(type='apartment')
+    serializer_class = PropertySerializer
 
+
+class HouseDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Property.objects.filter(type='house')
+    serializer_class = PropertySerializer
+
+
+class HotelDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Property.objects.filter(type='hotel')
+    serializer_class = PropertySerializer
+
+
+class HostelDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Property.objects.filter(type='hostel')
+    serializer_class = PropertySerializer
 
 
 def house_list(request):
     houses = House.objects.all()
     return render(request, 'houses/house_list.html', {'houses': houses})
 
+
 def house_detail(request, pk):
     house = get_object_or_404(House, pk=pk)
     return render(request, 'houses/house_detail.html', {'house': house})
+
 
 def booking_request(request):
     if request.method == 'POST':
@@ -41,22 +53,7 @@ def booking_request(request):
 
 
 def property_list(request):
-    properties = Property.objects.all()
-    return render(request, 'property_list.html', {'properties': properties})
-
-# def property_create(request):
-#     if request.method == 'POST':
-#         form = PropertyForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('property_list')
-#     else:
-#         form = PropertyForm()
-#     return render(request, 'property_form.html', {'form': form})
-
-
-def property_list(request):
-    region_id = request.GET.get('region')  # получаем id из GET-запроса
+    region_id = request.GET.get('region')
     properties = Property.objects.all()
     regions = Region.objects.all()
 
@@ -68,6 +65,7 @@ def property_list(request):
         'regions': regions,
         'selected_region': int(region_id) if region_id else None
     })
+
 
 def property_create(request):
     if request.method == 'POST':
@@ -87,29 +85,24 @@ class PropertyViewSet(viewsets.ModelViewSet):
     serializer_class = PropertySerializer
 
 
-
-def home(request):
-    if request.method == 'POST':
-        form = HouseRequestForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('thank_you')  # Сделай отдельную страницу "Спасибо"
-    else:
-        form = HouseRequestForm()
-    return render(request, 'home.html', {'form': form})
+class HouseViewSet(viewsets.ModelViewSet):
+    queryset = House.objects.all()
+    serializer_class = HouseSerializer
 
 
-def home_view(request):
-    if request.method == 'POST':
-        form = RequestFormForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('home')  # Название маршрута
-    else:
-        form = RequestFormForm()
-    return render(request, 'home.html', {'form': form})
+class ApartmentViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.filter(type='apartment')
+    serializer_class = PropertySerializer
 
 
+class HotelViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.filter(type='hotel')
+    serializer_class = PropertySerializer
+
+
+class HostelViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.filter(type='hostel')
+    serializer_class = PropertySerializer
 
 
 def home_view(request):
@@ -122,21 +115,3 @@ def home_view(request):
     else:
         form = RequestFormForm()
     return render(request, 'home.html', {'form': form})
-
-
-class HouseViewSet(viewsets.ModelViewSet):
-    queryset = House.objects.all()
-    serializer_class = HouseSerializer
-
-
-class ApartmentViewSet(viewsets.ModelViewSet):
-    queryset = Property.objects.filter(type='apartment')
-    serializer_class = PropertySerializer
-
-class HotelViewSet(viewsets.ModelViewSet):
-    queryset = Property.objects.filter(type='hotel')
-    serializer_class = PropertySerializer
-
-class HostelViewSet(viewsets.ModelViewSet):
-    queryset = Property.objects.filter(type='hostel')
-    serializer_class = PropertySerializer
