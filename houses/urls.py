@@ -7,6 +7,9 @@ from .views import (
     HostelDetailAPIView,
     PropertyDetailAPIView,
 )
+from .views import confirm_booking
+from .views import booking_list
+from .views import property_list
 
 urlpatterns = [
     path('', views.house_list, name='house_list'),
@@ -20,4 +23,8 @@ urlpatterns = [
     path('api/hotels/<int:pk>/', HotelDetailAPIView.as_view(), name='api_hotel_detail'),
     path('api/hostels/<int:pk>/', HostelDetailAPIView.as_view(), name='api_hostel_detail'),
     path('api/properties/<int:pk>/', PropertyDetailAPIView.as_view(), name='api_property_detail'),
+    path('booking-confirm/<int:pk>/', confirm_booking, name='confirm_booking'),
+    path('booking-requests/', booking_list, name='booking_list'),
+    path('bookingrequest/<int:pk>/confirm/', views.confirm_booking, name='confirm_booking'),
+    path('properties/', property_list, name='property_list'),
 ]

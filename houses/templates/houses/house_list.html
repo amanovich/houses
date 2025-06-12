@@ -2,16 +2,38 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Список домов</title>
+    <title>Список коттеджей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .house {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+    </style>
 </head>
 <body>
     <h1>Список коттеджей</h1>
     {% for house in houses %}
-        <div>
+        <div class="house">
             <h2>{{ house.title }}</h2>
-            <p>{{ house.location }}</p>
-            <p>{{ house.price_per_day }} ₽ / сутки</p>
-            <img src="{{ house.image.url }}" alt="{{ house.title }}" width="300">
+            <p><strong>Локация:</strong> {{ house.location }}</p>
+            <p><strong>Цена:</strong> {{ house.price_per_day }} ₽ / сутки</p>
+            {% if house.image %}
+                <img src="{{ house.image.url }}" alt="{{ house.title }}">
+            {% else %}
+                <p><em>Изображение отсутствует</em></p>
+            {% endif %}
         </div>
     {% endfor %}
 </body>

@@ -4,7 +4,21 @@ from .forms import BookingRequestForm, PropertyForm, HouseRequestForm, RequestFo
 from django.contrib import messages
 from rest_framework import viewsets, generics
 from .serializers import PropertySerializer, HouseSerializer
+from .models import BookingRequest
+from django.contrib.auth.decorators import login_required
 
+@login_required
+def confirm_booking(request, pk):
+    booking = get_object_or_404(BookingRequest, pk=pk)
+    booking.is_confirmed = True
+    booking.save()
+    messages.success(request, "Бронирование подтверждено.")
+    return redirect('booking_list')
+
+
+def booking_list(request):
+    bookings = BookingRequest.objects.all()
+    return render(request, 'booking_list.html', {'bookings': bookings})
 
 class PropertyDetailAPIView(generics.RetrieveAPIView):
     queryset = Property.objects.all()
@@ -115,3 +129,7 @@ def home_view(request):
     else:
         form = RequestFormForm()
     return render(request, 'home.html', {'form': form})
+
+
+
+

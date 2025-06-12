@@ -1,0 +1,10 @@
+{% for booking in bookings %}
+  <div>
+    <p>{{ booking.name }} — {{ booking.phone }} — {{ booking.start_date }} to {{ booking.end_date }}</p>
+    {% if not booking.is_confirmed %}
+      <a href="{% url 'confirm_booking' booking.pk %}">✅ Подтвердить</a>
+    {% else %}
+      <strong style="color: green;">✅ Подтверждено</strong>
+    {% endif %}
+  </div>
+{% endfor %}

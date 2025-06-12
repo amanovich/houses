@@ -1,29 +1,31 @@
-<h2>Список недвижимости</h2>
+<h1>Список объектов недвижимости</h1>
 
-<form method="get">
-  <label>Фильтр по области:</label>
-  <select name="region" onchange="this.form.submit()">
-    <option value="">Все области</option>
-    {% for region in regions %}
-      <option value="{{ region.id }}" {% if selected_region == region.id %}selected{% endif %}>
-        {{ region.name }}
-      </option>
-    {% endfor %}
-  </select>
-</form>
+{% for property in properties %}
+    <div style="border:1px solid #ddd; border-radius:10px; padding:20px; margin-bottom:20px;">
+        <h2>{{ property.get_type_display }}</h2>
 
-<hr>
+        {% with property.images.first as image %}
+            {% if image and image.image %}
+                <img src="{{ image.image.url }}" alt="Фото объекта" style="max-width:300px;">
+            {% else %}
+                <p><em>Изображение отсутствует</em></p>
+            {% endif %}
+        {% endwith %}
 
-<ul>
-  {% for p in properties %}
-    <li>
-      <strong>{{ p.get_type_display }}:</strong>
-      {{ p.street }} {{ p.house_number }},
-      район: {{ p.district.name }},
-      область: {{ p.region.name }}<br>
-      Тел: {{ p.phone_number }}
-    </li>
-  {% empty %}
-    <li>Объекты не найдены.</li>
-  {% endfor %}
-</ul>
+        <p><strong>Адрес:</strong> {{ property.street }} {{ property.house_number }}{% if property.apartment_number %}, кв. {{ property.apartment_number }}{% endif %}</p>
+        <p><strong>Район:</strong> {{ property.district.name }} ({{ property.district.region.name }})</p>
+        <p><strong>Телефон:</strong> {{ property.phone_number }}</p>
+
+        {% if property.features.exists %}
+            <p><strong>Удобства:</strong>
+                {% for feature in property.features.all %}
+                    {{ feature.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    <em>Не указаны</em>
+                {% endfor %}
+            </p>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>Нет доступных объектов.</p>
+{% endfor %}
